@@ -6,31 +6,46 @@
 /*   By: degabrie <degabrie@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/19 22:11:33 by degabrie          #+#    #+#             */
-/*   Updated: 2021/08/20 22:47:04 by degabrie         ###   ########.fr       */
+/*   Updated: 2021/08/21 22:42:19 by degabrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"get_next_line.h"
+#include	"libft/libft.h"
+#include	<stdio.h>
+#include	<fcntl.h>
 
 char	*get_next_line(int	fd)
 {
-	static char	*buffer;
+	static char	**lineptr;
+	static int	i;
+	char		buffer[BUFFER_SIZE];
 	char		*line;
-	char		*strline;
 
 	if (fd > 0)
 	{
-		line = (char *)malloc(BUFFER_SIZE * sizeof(char));
-		if (!line)
-			return (0);
-		if (!buffer)
+		lineptr = (char **)malloc(BUFFER_SIZE * sizeof(char *));
+		while (read(fd, buffer, BUFFER_SIZE))
 		{
-			buffer = (char *)malloc(BUFFER_SIZE * sizeof(char));
-			if (!buffer)
-				return (0);
+			if (ft_strchr(buffer, '\n'))
+			{
+				line = (char *)malloc(ft_strlen(buffer + 1) * sizeof(char));
+				ft_strlcpy(line, buffer, ft_strlen(buffer));
+				*lineptr = line;
+				break ;
+			}
+			lineptr++;
 		}
-		return (strline);
+		return (*lineptr);
 	}
 	return (0);
 }
 
+int	main(void)
+{
+	int f = open("test.txt", O_RDONLY);
+	char	*str = get_next_line(f);
+	printf("%s", str);
+	printf("%p\n", str);
+	return (0);
+}
