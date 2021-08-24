@@ -6,7 +6,7 @@
 /*   By: degabrie <degabrie@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/19 22:11:33 by degabrie          #+#    #+#             */
-/*   Updated: 2021/08/24 10:10:10 by degabrie         ###   ########.fr       */
+/*   Updated: 2021/08/24 16:00:48 by degabrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 #include	<stdio.h>
 #include	<fcntl.h>
 
-static size_t	ft_newline_len(char *line);
-// static char	*ft_check_leak(char	*leaks, char	*line);
+static char	*ft_check_leak(char	*leaks, char	*line, int	fd);
+static char	*ft_leak_backup(char	*line, char	*leaks);
 
 char	*get_next_line(int	fd)
 {
@@ -24,85 +24,75 @@ char	*get_next_line(int	fd)
 	char		*line;
 	static char	*leaks;
 	ssize_t		i;
-	size_t		j;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
 	buffer = (char *)malloc(BUFFER_SIZE * sizeof(char));
-	line = (char *)malloc(BUFFER_SIZE * sizeof(char));
-	i = 1;
-	if (!leaks)
+	line = ft_strdup("");
+	if (leaks)
 	{
-		while (i > 0)
-		{
-			i = read(fd, buffer, BUFFER_SIZE);
-			line = ft_strjoin(line, buffer);
-			// printf("%s\n", line);
-			if (ft_strchr(line, '\n'))
-			{
-				leaks = ft_strdup(ft_strchr(line, '\n'));
-				if (leaks[0] == '\n')
-					leaks = leaks + 1;
-				if (!leaks)
-					free(leaks);
-				break ;
-			}
-		}
-		j = ft_newline_len(line);
-		line = ft_substr(line, 0, j + 1);
-		// printf("Leak: %s\n", leaks);
-		free(buffer);
+		line = ft_check_leak(leaks, line, fd);
+		free(leaks);
+		if (ft_strchr(line, '\n'))
+			leaks = ft_leak_backup(line, leaks);
+		line = ft_substr(line, 0, ft_strlen(line) - ft_strlen(leaks));
 		return (line);
 	}
+	i = 1;
+	while (i)
+	{
+		i = read(fd, buffer, BUFFER_SIZE);
+		line = ft_strjoin(line, buffer);
+		if (ft_strchr(line, '\n'))
+			break ;
+	}
+	leaks = ft_leak_backup(line, leaks);
+	line = ft_substr(line, 0, ft_strlen(line) - ft_strlen(leaks));
+	free(buffer);
+	return (line);
+}
+
+static char	*ft_check_leak(char	*leaks, char	*line, int	fd)
+{
+	char	*buffer;
+	char	*new_buffer;
+	ssize_t	i;
+	size_t	len;
+
+	buffer = (char *)malloc(BUFFER_SIZE * sizeof(char));
+	i = 1;
 	while (i > 0)
 	{
 		i = read(fd, buffer, BUFFER_SIZE);
 		line = ft_strjoin(line, buffer);
-		// printf("%s\n", line);
 		if (ft_strchr(line, '\n'))
-		{
-			leaks = ft_strdup(ft_strchr(line, '\n'));
-			if (leaks[0] == '\n')
-				leaks = leaks + 1;
-			if (!leaks)
-				free(leaks);
 			break ;
-		}
 	}
-	// printf("Leak: %s\n", leaks);
-	return (line);
+	len = ft_strlen(line) + ft_strlen(leaks);
+	new_buffer = (char *)malloc(len * sizeof(char));
+	new_buffer = ft_strjoin(leaks, line);
+	return (new_buffer);
 }
 
-static size_t	ft_newline_len(char *line)
+static char	*ft_leak_backup(char	*line, char	*leaks)
 {
-	size_t	i;
-
-	i = 0;
-	while (line[i] != '\n')
-		i++;
-	return (i);
+	leaks = ft_strdup(ft_strchr(line, '\n') + 1);
+	if (!leaks)
+		free(leaks);
+	return (leaks);
 }
-
-// static char	*ft_check_leak(char	*leaks, char	*line)
-// {
-// 	char	*new_buffer;
-	
-// 	if (leaks[0] == '\n')
-// 		leaks = leaks + 1;
-// 	else if (!leaks)
-// 		free(leaks);
-// 	new_buffer = ft_strjoin(line, leaks);
-// 	return (new_buffer);
-// }
 
 int	main(void)
 {
 	int i = 0;
+	char *line;
 
 	int f = open("test.txt", O_RDONLY);
 	while (i < f)
 	{
-		printf("%s", get_next_line(f));
+		line = get_next_line(f);
+		printf("Line %d:\t %s", i, line);
+		free(line);
 		i++;
 	}
 	return (0);
