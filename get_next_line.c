@@ -6,7 +6,7 @@
 /*   By: degabrie <degabrie@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/19 22:11:33 by degabrie          #+#    #+#             */
-/*   Updated: 2021/08/21 22:42:19 by degabrie         ###   ########.fr       */
+/*   Updated: 2021/08/23 22:48:04 by degabrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,37 +15,63 @@
 #include	<stdio.h>
 #include	<fcntl.h>
 
+static size_t	ft_newline_len(char *line);
+
 char	*get_next_line(int	fd)
 {
-	static char	**lineptr;
-	static int	i;
-	char		buffer[BUFFER_SIZE];
+	char		*buffer;
 	char		*line;
+	static char	*leaks;
+	ssize_t		i;
+	size_t		j;
 
-	if (fd > 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (0);
+	buffer = (char *)malloc(BUFFER_SIZE * sizeof(char));
+	line = (char *)malloc(BUFFER_SIZE * sizeof(char));
+	i = 1;
+	if (!leaks)
 	{
-		lineptr = (char **)malloc(BUFFER_SIZE * sizeof(char *));
-		while (read(fd, buffer, BUFFER_SIZE))
+		while (i > 0)
 		{
-			if (ft_strchr(buffer, '\n'))
+			i = read(fd, buffer, BUFFER_SIZE);
+			line = ft_strjoin(line, buffer);
+			if (ft_strchr(line, '\n'))
 			{
-				line = (char *)malloc(ft_strlen(buffer + 1) * sizeof(char));
-				ft_strlcpy(line, buffer, ft_strlen(buffer));
-				*lineptr = line;
+				leaks = ft_strdup(ft_strchr(line, '\n'));
+				if (leaks[0] == '\n')
+					leaks = leaks + 1;
+				if (!leaks)
+					free(leaks);
 				break ;
 			}
-			lineptr++;
 		}
-		return (*lineptr);
+		j = ft_newline_len(line);
+		line = ft_substr(line, 0, j + 1);
+		return (line);
 	}
 	return (0);
 }
 
+static size_t	ft_newline_len(char *line)
+{
+	size_t	i;
+
+	i = 0;
+	while (line[i] != '\n')
+		i++;
+	return (i);
+}
+
 int	main(void)
 {
+	int i = 0;
+
 	int f = open("test.txt", O_RDONLY);
-	char	*str = get_next_line(f);
-	printf("%s", str);
-	printf("%p\n", str);
+	while (i < f)
+	{
+		printf("%s", get_next_line(f));
+		i++;
+	}
 	return (0);
 }
