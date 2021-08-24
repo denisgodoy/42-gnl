@@ -6,7 +6,7 @@
 /*   By: degabrie <degabrie@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/19 22:11:33 by degabrie          #+#    #+#             */
-/*   Updated: 2021/08/23 22:48:04 by degabrie         ###   ########.fr       */
+/*   Updated: 2021/08/24 10:10:10 by degabrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include	<fcntl.h>
 
 static size_t	ft_newline_len(char *line);
+// static char	*ft_check_leak(char	*leaks, char	*line);
 
 char	*get_next_line(int	fd)
 {
@@ -36,6 +37,7 @@ char	*get_next_line(int	fd)
 		{
 			i = read(fd, buffer, BUFFER_SIZE);
 			line = ft_strjoin(line, buffer);
+			// printf("%s\n", line);
 			if (ft_strchr(line, '\n'))
 			{
 				leaks = ft_strdup(ft_strchr(line, '\n'));
@@ -48,9 +50,27 @@ char	*get_next_line(int	fd)
 		}
 		j = ft_newline_len(line);
 		line = ft_substr(line, 0, j + 1);
+		// printf("Leak: %s\n", leaks);
+		free(buffer);
 		return (line);
 	}
-	return (0);
+	while (i > 0)
+	{
+		i = read(fd, buffer, BUFFER_SIZE);
+		line = ft_strjoin(line, buffer);
+		// printf("%s\n", line);
+		if (ft_strchr(line, '\n'))
+		{
+			leaks = ft_strdup(ft_strchr(line, '\n'));
+			if (leaks[0] == '\n')
+				leaks = leaks + 1;
+			if (!leaks)
+				free(leaks);
+			break ;
+		}
+	}
+	// printf("Leak: %s\n", leaks);
+	return (line);
 }
 
 static size_t	ft_newline_len(char *line)
@@ -62,6 +82,18 @@ static size_t	ft_newline_len(char *line)
 		i++;
 	return (i);
 }
+
+// static char	*ft_check_leak(char	*leaks, char	*line)
+// {
+// 	char	*new_buffer;
+	
+// 	if (leaks[0] == '\n')
+// 		leaks = leaks + 1;
+// 	else if (!leaks)
+// 		free(leaks);
+// 	new_buffer = ft_strjoin(line, leaks);
+// 	return (new_buffer);
+// }
 
 int	main(void)
 {
