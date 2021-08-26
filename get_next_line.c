@@ -6,7 +6,7 @@
 /*   By: degabrie <degabrie@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/19 22:11:33 by degabrie          #+#    #+#             */
-/*   Updated: 2021/08/24 20:29:55 by degabrie         ###   ########.fr       */
+/*   Updated: 2021/08/26 00:17:31 by degabrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*get_next_line(int	fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
-	line = "";
+	line = ft_strdup("");
 	if (leaks)
 	{
 		line = ft_read_line(line, leaks, fd);
@@ -41,17 +41,19 @@ char	*get_next_line(int	fd)
 
 static char	*ft_read_line(char	*line, char	*leaks, int	fd)
 {
-	ssize_t	i;
-	char	*buffer;
+	char	buffer[BUFFER_SIZE + 1];
+	ssize_t	bytes_read;
+	size_t	found_n;
 
-	buffer = (char *)malloc(BUFFER_SIZE * sizeof(char));
-	i = 1;
-	while (i)
+	bytes_read = 1;
+	found_n = 1;
+	while (found_n && bytes_read)
 	{
-		i = read(fd, buffer, BUFFER_SIZE);
-		line = ft_strjoin(line, buffer);
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (ft_strchr(line, '\n'))
-			break ;
+			found_n = 0;
+		buffer[bytes_read] = '\0';
+		line = ft_strjoin(line, buffer);
 	}
 	if (leaks)
 		line = ft_strjoin(leaks, line);
