@@ -6,7 +6,7 @@
 /*   By: degabrie <degabrie@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/26 15:28:21 by degabrie          #+#    #+#             */
-/*   Updated: 2021/08/27 20:22:50 by degabrie         ###   ########.fr       */
+/*   Updated: 2021/08/28 11:46:18 by degabrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*get_next_line(int	fd)
 {
-	static char	*remaining;
+	static char	remaining[BUFFER_SIZE + 1];
 	ssize_t		bytes;
 	char		*line;
 	char		*temp_line;
@@ -22,15 +22,9 @@ char	*get_next_line(int	fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || fd > 256)
 		return (0);
-	if (remaining)
-	{
-		line = ft_strdup(remaining);
-		free(remaining);
-	}
-	else
-	{
-		line = ft_strdup("");
-	}
+	line = ft_strdup(remaining);
+	if (!line)
+		return (0);
 	bytes = 1;
 	while (bytes)
 	{
@@ -43,13 +37,16 @@ char	*get_next_line(int	fd)
 		buffer[bytes] = '\0';
 		temp_line = line;
 		line = ft_strjoin(temp_line, buffer);
+		if (!line)
+			return (0);
 		free(temp_line);
 		if (ft_strchr(line, '\n'))
 		{
 			temp_line = line;
-			remaining = (char *)malloc(ft_strlen(temp_line) + 1 * sizeof(char));
-			ft_strlcpy(remaining, ft_strchr(temp_line, '\n') + 1, ft_strlen(temp_line));
+			ft_strlcpy(remaining, (ft_strchr(line, '\n') + 1), ft_strlen(line));
 			line = ft_substr(temp_line, 0, ft_strlen(temp_line) - ft_strlen(remaining));
+			if (!line)
+				return (0);
 			free(temp_line);
 			break ;
 		}
