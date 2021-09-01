@@ -6,32 +6,38 @@
 /*   By: degabrie <degabrie@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/19 22:11:33 by degabrie          #+#    #+#             */
-/*   Updated: 2021/08/31 19:36:29 by degabrie         ###   ########.fr       */
+/*   Updated: 2021/08/31 21:39:17 by degabrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"get_next_line.h"
 
-static char	*ft_read_line(char	*line, char	*leaks, int	fd);
-static char	*ft_check_eof(ssize_t bytes, char	*line, char	*leaks);
+static char	*ft_read_line(char	*line, char	**leaks, int	fd);
+static char	*ft_check_eof(ssize_t bytes, char	*line);
+static char	*ft_strchr(const char	*s, int	c);
 
 char	*get_next_line(int	fd)
 {
 	char		*line;
-	static char	leaks[BUFFER_SIZE];
+	static char	*leaks;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd > 256)
 		return (0);
+	if (!leaks)
+	{
+		leaks = ft_strdup("");
+	}
 	line = ft_strdup(leaks);
-	line = ft_read_line(line, &*leaks, fd);
+	free(leaks);
+	leaks = NULL;
+	line = ft_read_line(line, &leaks, fd);
 	return (line);
 }
 
-static char	*ft_read_line(char	*line, char	*leaks, int	fd)
+static char	*ft_read_line(char	*line, char	**leaks, int	fd)
 {
 	char	buffer[BUFFER_SIZE + 1];
 	ssize_t	bytes_read;
-	char	*temp_leak;
 
 	bytes_read = 1;
 	while (bytes_read)
@@ -46,19 +52,16 @@ static char	*ft_read_line(char	*line, char	*leaks, int	fd)
 		line = ft_strjoin(line, buffer);
 		if (ft_strchr(line, '\n'))
 		{
-			temp_leak = ft_strchr(line, '\n') + 1;
-			ft_strlcpy(&*leaks, temp_leak, ft_strlen(temp_leak) + 1);
-			line = ft_substr(line, 0, ft_strlen(line) - ft_strlen(&*leaks));
+			*leaks = ft_strdup(ft_strchr(line, '\n') + 1);
+			line = ft_substr(line, 0, ft_strlen(line) - ft_strlen(*leaks));
 			break ;
 		}
 	}
-	return (ft_check_eof(bytes_read, line, &*leaks));
+	return (ft_check_eof(bytes_read, line));
 }
 
-static char	*ft_check_eof(ssize_t bytes, char	*line, char	*leaks)
+static char	*ft_check_eof(ssize_t bytes, char	*line)
 {
-	if (!ft_strchr(line, '\n'))
-		ft_memset(&*leaks, 0, ft_strlen(&*leaks));
 	if (!bytes && line[bytes] == '\0')
 	{
 		free(line);
@@ -67,22 +70,18 @@ static char	*ft_check_eof(ssize_t bytes, char	*line, char	*leaks)
 	return (line);
 }
 
-void	*ft_memset(void	*b, int	c, size_t	len)
+static char	*ft_strchr(const char	*s, int	c)
 {
-	char	*str;
+	char	*nb;
 
-	str = (char *)b;
-	while (len--)
-		*(str++) = (unsigned char)c;
-	return (b);
-}
-
-size_t	ft_strlen(const char	*s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
+	nb = (char *)&s[(ft_strlen(s))];
+	if ((char)c == '\0')
+		return (nb);
+	while (*s)
+	{
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
+	}
+	return (0);
 }

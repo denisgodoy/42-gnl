@@ -6,11 +6,21 @@
 /*   By: degabrie <degabrie@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/26 11:04:05 by degabrie          #+#    #+#             */
-/*   Updated: 2021/08/31 19:36:24 by degabrie         ###   ########.fr       */
+/*   Updated: 2021/08/31 19:57:34 by degabrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+size_t	ft_strlen(const char	*s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
+}
 
 size_t	ft_strlcpy(char	*dst,	const char	*src,	size_t	dstsize)
 {
@@ -67,22 +77,6 @@ char	*ft_strdup(const char	*s1)
 		return (0);
 	ft_strlcpy(ptr, s1, size);
 	return (ptr);
-}
-
-char	*ft_strchr(const char	*s, int	c)
-{
-	char	*nb;
-
-	nb = (char *)&s[(ft_strlen(s))];
-	if ((char)c == '\0')
-		return (nb);
-	while (*s)
-	{
-		if (*s == (char)c)
-			return ((char *)s);
-		s++;
-	}
-	return (0);
 }
 
 char	*ft_substr(char	*s, unsigned int	start, size_t	len)
