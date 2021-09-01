@@ -6,7 +6,7 @@
 /*   By: degabrie <degabrie@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/31 21:50:39 by degabrie          #+#    #+#             */
-/*   Updated: 2021/08/31 22:03:35 by degabrie         ###   ########.fr       */
+/*   Updated: 2021/09/01 11:38:31 by degabrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,7 @@ char	*get_next_line(int	fd)
 	if (fd < 0 || BUFFER_SIZE <= 0 || fd > 256)
 		return (0);
 	if (!leaks[fd])
-	{
 		leaks[fd] = ft_strdup("");
-	}
 	line = ft_strdup(leaks[fd]);
 	free(leaks[fd]);
 	leaks[fd] = NULL;
