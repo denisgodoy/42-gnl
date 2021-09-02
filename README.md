@@ -3,11 +3,13 @@
 # get_next_line 💻
 May it be a file, stdin or a network connection, get_next_line function will read content line by line.
 
-- [Evaluation](https://github.com/denisgodoy/)
-- [Mandatory part](https://github.com/denisgodoy/)
-- [Bonus part](https://github.com/denisgodoy/)
+- [Evaluation](https://github.com/denisgodoy/42-gnl#evaluation)
+- [Mandatory part](https://github.com/denisgodoy/42-gnl#mandatory-part)
+- [Bonus part](https://github.com/denisgodoy/42-gnl#bonus-part)
 
 ## Evaluation
+![evaluation](https://user-images.githubusercontent.com/56933400/131925748-9e4015a1-05bb-4b58-864c-08deec8d560e.png)
+![badge](https://game.42sp.org.br/static/assets/achievements/get_next_linem.png)
 
 ## Mandatory part
 Calling get_next_line in a loop will allow you to read the text available on the file descriptor one line at a time.
