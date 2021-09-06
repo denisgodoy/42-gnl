@@ -6,13 +6,13 @@
 /*   By: degabrie <degabrie@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/31 21:50:39 by degabrie          #+#    #+#             */
-/*   Updated: 2021/09/01 11:38:31 by degabrie         ###   ########.fr       */
+/*   Updated: 2021/09/06 18:06:33 by degabrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"get_next_line_bonus.h"
 
-static char	*ft_strchr(const char	*s, int	c)
+static char	*ft_strchr(const char *s, int c)
 {
 	char	*nb;
 
@@ -28,7 +28,7 @@ static char	*ft_strchr(const char	*s, int	c)
 	return (0);
 }
 
-static char	*ft_check_eof(ssize_t bytes, char	*line)
+static char	*ft_check_eof(ssize_t bytes, char *line)
 {
 	if (!bytes && line[bytes] == '\0')
 	{
@@ -38,7 +38,7 @@ static char	*ft_check_eof(ssize_t bytes, char	*line)
 	return (line);
 }
 
-static char	*ft_read_line(char	*line, char	**leaks, int	fd)
+static char	*ft_read_line(char *line, char **leaks, int fd)
 {
 	char	buffer[BUFFER_SIZE + 1];
 	ssize_t	bytes_read;
@@ -64,7 +64,7 @@ static char	*ft_read_line(char	*line, char	**leaks, int	fd)
 	return (ft_check_eof(bytes_read, line));
 }
 
-char	*get_next_line(int	fd)
+char	*get_next_line(int fd)
 {
 	char		*line;
 	static char	*leaks[256];

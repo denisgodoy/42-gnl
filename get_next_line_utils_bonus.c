@@ -6,13 +6,13 @@
 /*   By: degabrie <degabrie@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/31 21:51:03 by degabrie          #+#    #+#             */
-/*   Updated: 2021/08/31 21:51:42 by degabrie         ###   ########.fr       */
+/*   Updated: 2021/09/06 18:10:48 by degabrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-size_t	ft_strlen(const char	*s)
+size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
@@ -22,7 +22,7 @@ size_t	ft_strlen(const char	*s)
 	return (i);
 }
 
-size_t	ft_strlcpy(char	*dst,	const char	*src,	size_t	dstsize)
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
 	size_t	i;
 
@@ -40,7 +40,7 @@ size_t	ft_strlcpy(char	*dst,	const char	*src,	size_t	dstsize)
 	return (ft_strlen(src));
 }
 
-char	*ft_strjoin(char	*s1, char const	*s2)
+char	*ft_strjoin(char *s1, char const *s2)
 {
 	char	*ptr;
 	size_t	size;
@@ -66,7 +66,7 @@ char	*ft_strjoin(char	*s1, char const	*s2)
 	return (ptr);
 }
 
-char	*ft_strdup(const char	*s1)
+char	*ft_strdup(const char *s1)
 {
 	char	*ptr;
 	size_t	size;
@@ -79,7 +79,7 @@ char	*ft_strdup(const char	*s1)
 	return (ptr);
 }
 
-char	*ft_substr(char	*s, unsigned int	start, size_t	len)
+char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	char	*ptr;
 	size_t	strlen;

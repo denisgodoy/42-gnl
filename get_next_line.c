@@ -6,17 +6,17 @@
 /*   By: degabrie <degabrie@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/19 22:11:33 by degabrie          #+#    #+#             */
-/*   Updated: 2021/09/01 11:34:12 by degabrie         ###   ########.fr       */
+/*   Updated: 2021/09/06 18:13:37 by degabrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"get_next_line.h"
 
-static char	*ft_read_line(char	*line, char	**leaks, int	fd);
-static char	*ft_check_eof(ssize_t bytes, char	*line);
-static char	*ft_strchr(const char	*s, int	c);
+static char	*ft_read_line(char *line, char **leaks, int fd);
+static char	*ft_check_eof(ssize_t bytes, char *line);
+static char	*ft_strchr(const char *s, int c);
 
-char	*get_next_line(int	fd)
+char	*get_next_line(int fd)
 {
 	char		*line;
 	static char	*leaks;
@@ -32,7 +32,7 @@ char	*get_next_line(int	fd)
 	return (line);
 }
 
-static char	*ft_read_line(char	*line, char	**leaks, int	fd)
+static char	*ft_read_line(char *line, char **leaks, int fd)
 {
 	char	buffer[BUFFER_SIZE + 1];
 	ssize_t	bytes_read;
@@ -58,7 +58,7 @@ static char	*ft_read_line(char	*line, char	**leaks, int	fd)
 	return (ft_check_eof(bytes_read, line));
 }
 
-static char	*ft_check_eof(ssize_t bytes, char	*line)
+static char	*ft_check_eof(ssize_t bytes, char *line)
 {
 	if (!bytes && line[bytes] == '\0')
 	{
@@ -68,7 +68,7 @@ static char	*ft_check_eof(ssize_t bytes, char	*line)
 	return (line);
 }
 
-static char	*ft_strchr(const char	*s, int	c)
+static char	*ft_strchr(const char *s, int c)
 {
 	char	*nb;
 
