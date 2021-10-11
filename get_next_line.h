@@ -6,7 +6,7 @@
 /*   By: degabrie <degabrie@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/19 22:11:00 by degabrie          #+#    #+#             */
-/*   Updated: 2021/10/11 19:22:20 by degabrie         ###   ########.fr       */
+/*   Updated: 2021/10/11 20:20:39 by degabrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define GET_NEXT_LINE_H
 # include <stdlib.h>
 # include <unistd.h>
+
+# define BUFFER_SIZE 10
 
 char	*ft_strdup(const char *s1);
 char	*ft_strjoin_free(char *s1, char const *s2);
