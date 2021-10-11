@@ -6,7 +6,7 @@
 /*   By: degabrie <degabrie@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/31 21:50:46 by degabrie          #+#    #+#             */
-/*   Updated: 2021/09/06 18:08:20 by degabrie         ###   ########.fr       */
+/*   Updated: 2021/10/11 19:23:52 by degabrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 # include <unistd.h>
 
 char	*ft_strdup(const char *s1);
-char	*ft_strjoin(char *s1, char const *s2);
+char	*ft_strjoin_free(char *s1, char const *s2);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 size_t	ft_strlen(const char *s);
-char	*ft_substr(char *s, unsigned int start, size_t len);
+char	*ft_substr_free(char *s, unsigned int start, size_t len);
 char	*get_next_line(int fd);
 
 #endif

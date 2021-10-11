@@ -6,7 +6,7 @@
 /*   By: degabrie <degabrie@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/19 22:11:33 by degabrie          #+#    #+#             */
-/*   Updated: 2021/09/06 18:13:37 by degabrie         ###   ########.fr       */
+/*   Updated: 2021/10/11 19:22:44 by degabrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,11 @@ static char	*ft_read_line(char *line, char **leaks, int fd)
 			return (0);
 		}
 		buffer[bytes_read] = '\0';
-		line = ft_strjoin(line, buffer);
+		line = ft_strjoin_free(line, buffer);
 		if (ft_strchr(line, '\n'))
 		{
 			*leaks = ft_strdup(ft_strchr(line, '\n') + 1);
-			line = ft_substr(line, 0, ft_strlen(line) - ft_strlen(*leaks));
+			line = ft_substr_free(line, 0, ft_strlen(line) - ft_strlen(*leaks));
 			break ;
 		}
 	}
